@@ -18,6 +18,14 @@ An attempt to use Azure Search as a search first experience to navigate a produc
 	- pricing
 		- partitions == document counts (size)
 		- replicas == performance (query load)
+		- free vs standard below
+		- 50 MB free, 25 GB per unit
+		- queries per second N/A for free, 15 per unit
+		- 10000 documents, 3 index limit for free, 15m per unit 50 index limit
+		- scale out limits N/A for free, up to 36 units
+		- price per unit per hour free, .168 cents per hour
+	- performance
+		- 
 	- HA requires a minimum of 3 replicas (3 copies of the same index)
 	- REST API (no SDK): [http://msdn.microsoft.com/en-us/library/azure/dn798935.aspx](http://msdn.microsoft.com/en-us/library/azure/dn798935.aspx "http://msdn.microsoft.com/en-us/library/azure/dn798935.aspx")
 	- !!Security is limited to api-key in HTTP header!!
