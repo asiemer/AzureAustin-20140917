@@ -13,64 +13,72 @@ namespace DataGenerator
 {
     public class Program
     {
-        private Dealer[] _dealers;
-        private string[] _colors;
-        private string[] _types;
-        private string[] _options;
-        private string[] _packages;
-        private Dictionary<string, string> _images;
+        private static Dealer[] _dealers;
+        private static string[] _colors;
+        private static string[] _types;
+        private static string[] _options;
+        private static string[] _packages;
+        private static Dictionary<string, string> _images;
         private static Random _colorMeRandom;
         private static Random _typeMeRandom;
         private static Random _dealerMeRandom;
         private static Random _optionsMeRandom;
         private static Random _packageMeRandom;
         private static bool _createdDb;
+        private static Listing[] _listings;
 
         static void Main(string[] args)
         {
             Program p = new Program();
             p.InitData();
+            p.CreateListings(p);
 
+            
+
+            var createDatabase = Task.Factory.StartNew(async () => await CreateDatabase(_listings)).Unwrap();
+            Console.WriteLine("Creating the database");
+            createDatabase.Wait();
+            Console.WriteLine("Database created");
+
+
+            Console.ReadLine();
+        }
+
+        public static async Task CreateDatabase(Listing[] listings)
+        {
+            var client = new DocumentClient(new Uri(Keys.Uri), Keys.PrimaryKey);
+            Database database = await client.CreateDatabaseAsync(
+               new Database
+               {
+                   Id = "ListingsRegistry"
+               });
+
+            DocumentCollection documentCollection = new DocumentCollection
+            {
+                Id = "ListingCollection"
+            };
+            documentCollection = await client.CreateDocumentCollectionAsync(database.SelfLink, documentCollection);
+
+            foreach (Listing listing in listings)
+            {
+                await client.CreateDocumentAsync(documentCollection.SelfLink, listing);
+            }
+        }
+
+        public void CreateListings(Program p)
+        {
             List<Listing> listings = new List<Listing>();
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 //get a Listing
                 var listing = p.GetListing();
                 listings.Add(listing);
 
-                //save to documentdb
-
-                //save to search
-
                 Console.WriteLine(listing.Image);
             }
 
-            var client = new DocumentClient(new Uri(Keys.Uri), Keys.PrimaryKey);
-            if (!_createdDb)
-            {
-                ResourceResponse<Database> database = await client.CreateDatabaseAsync(
-                    new Database
-                    {
-                        Id = "FamilyRegistry"
-                    });
-            }
-
-            Console.ReadLine();
-        }
-
-        public static void WriteDB(Listing listing)
-        {
-            var client = new DocumentClient(new Uri(Keys.Uri), Keys.PrimaryKey);   
-            if (!_createdDb)
-            {
-                ResourceResponse<Database> database = await client.CreateDatabaseAsync(
-                    new Database
-                    {
-                        Id = "FamilyRegistry"
-                    });
-            }
-             
+            _listings = listings.ToArray();
         }
 
         public Listing GetListing()
