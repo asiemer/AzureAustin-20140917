@@ -17,12 +17,12 @@ namespace DataGenerator
         public static async Task<Listing[]> GetHardTops()
         {
             var client = GetClient();
-            var collection = await GetCollection(client, Keys.ListingsDatabaseName, Keys.ListingCollectionName);
+            var collection = await GetCollection(client, Keys.ListingsDbName, Keys.ListingDbCollectionName);
 
             string sql = String.Format(@"SELECT l.Color, l.Options, l.Package, l.Type, l.Image, l.Dealer, l.Id 
                 FROM {0} l 
                     JOIN o IN l.Options
-                WHERE o.Name = 'hard top'", Keys.ListingCollectionName);
+                WHERE o.Name = 'hard top'", Keys.ListingDbCollectionName);
             var hardtopQuery = client.CreateDocumentQuery<Listing>(collection.SelfLink, sql).ToArray();
             var hardtops = hardtopQuery.ToArray();
 
@@ -32,9 +32,9 @@ namespace DataGenerator
         public static async Task<Listing[]> GetRubicons()
         {
             var client = GetClient();
-            var collection = await GetCollection(client, Keys.ListingsDatabaseName, Keys.ListingCollectionName);
+            var collection = await GetCollection(client, Keys.ListingsDbName, Keys.ListingDbCollectionName);
 
-            string sql = String.Format("SELECT * FROM {0} l WHERE l.Package = 'rubicon'", Keys.ListingCollectionName);
+            string sql = String.Format("SELECT * FROM {0} l WHERE l.Package = 'rubicon'", Keys.ListingDbCollectionName);
             var rubiconQuery = client.CreateDocumentQuery<Listing>(collection.SelfLink, sql).ToArray();
             var rubicons = rubiconQuery.ToArray();
 
@@ -44,12 +44,12 @@ namespace DataGenerator
         public static async Task<DocumentCollection> GetCollection(DocumentClient client, string dbname, string collectionName)
         {
             //get the database
-            var db = await RetrieveOrCreateDatabaseAsync(Keys.ListingsDatabaseName);
+            var db = await RetrieveOrCreateDatabaseAsync(Keys.ListingsDbName);
             Console.Write("DB SelfLink: ");
             Console.WriteLine((string)db.SelfLink);
 
             //get the collection
-            var collection = await RetrieveOrCreateCollectionAsync(db.SelfLink, Keys.ListingCollectionName);
+            var collection = await RetrieveOrCreateCollectionAsync(db.SelfLink, Keys.ListingDbCollectionName);
             Console.WriteLine("Collection self link: ");
             Console.WriteLine((string)collection.SelfLink);
 
@@ -58,7 +58,7 @@ namespace DataGenerator
 
         public static DocumentClient GetClient()
         {
-            var client = new DocumentClient(new Uri(Keys.Uri), Keys.PrimaryKey);
+            var client = new DocumentClient(new Uri(Keys.ListingsDbUri), Keys.ListingsDbPrimaryKey);
             return client;
         }
 
@@ -104,12 +104,12 @@ namespace DataGenerator
         {
             var client = GetClient();
 
-            Database database = await RetrieveOrCreateDatabaseAsync(Keys.ListingsDatabaseName);
+            Database database = await RetrieveOrCreateDatabaseAsync(Keys.ListingsDbName);
 
             Console.Write("Self link for new database: ");
             Console.WriteLine(database.SelfLink);
 
-            DocumentCollection documentCollection = await RetrieveOrCreateCollectionAsync(database.SelfLink, Keys.ListingCollectionName);
+            DocumentCollection documentCollection = await RetrieveOrCreateCollectionAsync(database.SelfLink, Keys.ListingDbCollectionName);
 
             foreach (Listing listing in listings)
             {

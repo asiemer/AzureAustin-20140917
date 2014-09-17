@@ -30,8 +30,6 @@ namespace DataGenerator
             {
                 var listing = GetListing();
                 listings.Add(listing);
-
-                Console.WriteLine(listing.Image);
             }
 
             return listings.ToArray();
