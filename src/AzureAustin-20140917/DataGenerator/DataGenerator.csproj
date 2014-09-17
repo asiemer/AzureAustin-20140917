@@ -61,11 +61,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentDbOperations.cs" />
     <Compile Include="DataFactory.cs" />
     <Compile Include="Dealer.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Keys2.cs" />
     <Compile Include="Listing.cs" />
+    <Compile Include="Option.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

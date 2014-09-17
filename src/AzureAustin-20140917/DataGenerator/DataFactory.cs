@@ -86,9 +86,15 @@ namespace DataGenerator
             return _colors[_colorMeRandom.Next(0, _colors.Length)];
         }
 
-        private string[] GetOptions()
+        private Option[] GetOptions()
         {
-            return _options[_optionsMeRandom.Next(0, _options.Length)].Split(',');
+            List<Option> result = new List<Option>();
+            string[] options = _options[_optionsMeRandom.Next(0, _options.Length)].Split(',');
+            foreach (string option in options)
+            {
+                result.Add(new Option() { Name = option});
+            }
+            return result.ToArray();
         }
 
         private string GetPackage()
