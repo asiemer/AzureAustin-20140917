@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGenerator
 {
@@ -89,9 +86,9 @@ namespace DataGenerator
             return _colors[_colorMeRandom.Next(0, _colors.Length)];
         }
 
-        private string GetOptions()
+        private string[] GetOptions()
         {
-            return _options[_optionsMeRandom.Next(0, _options.Length)];
+            return _options[_optionsMeRandom.Next(0, _options.Length)].Split(',');
         }
 
         private string GetPackage()
